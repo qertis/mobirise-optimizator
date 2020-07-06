@@ -1,0 +1,32 @@
+{
+  "name": "mobirise-optimizator",
+  "description": "",
+  "version": "0.0.1",
+  "keywords": [
+    "mobirise"
+  ],
+  "author": "qertis",
+  "license": "MIT",
+  "bin": {
+    "mobirise-optimizator": "./cli.js"
+  },
+  "main": "cli.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qertis/mobirise-optimizator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/qertis/mobirise-optimizator/issues"
+  },
+  "engines": {
+    "node": ">=10"
+  },
+  "dependencies": {
+    "html-minifier": "^4.0.0",
+    "typograf": "^6.11.1",
+    "yargs": "^15.4.0"
+  },
+  "files": [
+    "src/*.js"
+  ]
+}

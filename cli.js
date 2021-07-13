@@ -5,7 +5,7 @@ if (arg.some(argument => argument === '--help' || argument === 'h')) {
   console.log('Usage: mobirise-optimizator [options]\n' +
     '\n' +
     'Options:');
-  var mainOptions = {
+  const mainOptions = {
     'white-list': 'Specify an domain: <gotointeractive.com,baskovsky.ru>',
     'minifier': 'Boolean: <true>',
     'input-dir': 'Client path: <mobirise/>',
@@ -17,11 +17,10 @@ if (arg.some(argument => argument === '--help' || argument === 'h')) {
     'pwa-sw-path': 'Server path: </sw.js>',
     'pwa-install-service-worker-path': 'Server path: </install-service-worker.html>',
   };
-  var mainOptionKeys = Object.keys(mainOptions);
+  const mainOptionKeys = Object.keys(mainOptions);
   mainOptionKeys.forEach(function(key) {
-    var option = mainOptions[key];
-    const xxx = `--${key}`.padEnd(35) + option
-    console.log(xxx.toString())
+    const result = `--${key}`.padEnd(35) + mainOptions[key];
+    console.log(result.toString());
   });
   return;
 }
@@ -35,8 +34,7 @@ const inputFile = argv.inputDir + argv._;
 const outputFile = argv.outputDir + argv._;
 
 /**
- * SEO: norefferer links
- *
+ * @description SEO: norefferer links
  * @param {string} html
  * @return {string}
  */
@@ -54,8 +52,7 @@ function addRelsToExternal(html) {
 }
 
 /**
- * Speed: minify css, js, html
- *
+ * @description Speed: minify css, js, html
  * @return {string}
  */
 function minify() {
@@ -72,30 +69,30 @@ function minify() {
 }
 
 /**
- * SEO: text optimization
- *
+ * @description SEO: text optimization
  * @param {string} html
  * @return {string}
  */
 function typograf(html) {
   const tp = new Typograf({locale: ['ru', 'en-US']});
-  return tp.execute(html)
+  return tp.execute(html);
 }
 
 /**
- * SEO: remove odd anchors
- *
+ * @description SEO: remove odd anchors
  * @param {string} html
  * @return {string}
  */
 function removeOddHtml(html) {
   const ANCHOR_REGEX = /<section class="engine"><a.[^]*?<\/a><\/section>/g;
-  return html.replace(ANCHOR_REGEX, '');
+  const EMPTY_SYMBOLS = '';
+  return html
+      .replace(ANCHOR_REGEX, '')
+      .replaceAll(EMPTY_SYMBOLS, '');
 }
 
 /**
- * SEO: set custom opensearch engine
- *
+ * @description SEO: set custom opensearch engine
  * @param {string} html
  * @return {string}
  */
@@ -104,12 +101,12 @@ function opensearch(html) {
     return html;
   }
   const OPENSEARCH_REPLACE_LINK = `<link rel='search' type='application/opensearchdescription+xml' title="${argv.openSearchTitle}" href='${argv.openSearchPath}'>`;
-  return html.replace('</head>', OPENSEARCH_REPLACE_LINK + '</head>');
+  return html
+      .replace('</head>', OPENSEARCH_REPLACE_LINK + '</head>');
 }
 
 /**
- * SEO: set custom structured data
- *
+ * @description SEO: set custom structured data
  * @param {string} html
  * @return {string}
  */
@@ -118,12 +115,12 @@ function ld(html) {
     return html;
   }
   const jsonld = fs.readFileSync(argv.ldFile).toString();
-  return html.replace('</head>', `<script type="application/ld+json">${jsonld}</script></head>`);
+  return html
+      .replace('</head>', `<script type="application/ld+json">${jsonld}</script></head>`);
 }
 
 /**
- * SPEED: PWA Service Worker Registration
- *
+ * @description SPEED: PWA Service Worker Registration
  * @param {string} html
  * @return {string}
  */
@@ -131,14 +128,14 @@ function pwa(html) {
   if (!(argv.pwaManifestPath && argv.pwaSwPath && argv.pwaInstallServiceWorkerPath)) {
     return html;
   }
-
   const SW_INSTALL = "<script async custom-element='amp-install-serviceworker' src='https://cdn.ampproject.org/v0/amp-install-serviceworker-0.1.js'></script>";
   const htmlModified = html.replace('</head>', SW_INSTALL +
     `<link rel="manifest" href="${argv.pwaManifestPath}" crossOrigin="use-credentials">
     <meta name="theme-color" content="#16161d"/></head>`
   );
   const SW_AMP = `<amp-install-serviceworker src='${argv.pwaSwPath}' layout='nodisplay' data-iframe-src='${argv.pwaInstallServiceWorkerPath}'></amp-install-serviceworker>`;
-  return htmlModified.replace('</body>', SW_AMP + '</body>');
+  return htmlModified
+      .replace('</body>', SW_AMP + '</body>');
 }
 
 let result = minify();

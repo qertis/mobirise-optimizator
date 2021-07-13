@@ -1,6 +1,6 @@
 # mobirise-optimizator
 
-## example
+## Example
 ```bash
 mobirise-optimizator.js index.html 
     --white-list="gotointeractive.com" 

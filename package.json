@@ -19,12 +19,12 @@
     "url": "https://github.com/qertis/mobirise-optimizator/issues"
   },
   "engines": {
-    "node": ">=10"
+    "node": ">=14"
   },
   "dependencies": {
     "html-minifier": "^4.0.0",
-    "typograf": "^6.11.1",
-    "yargs": "^15.4.0"
+    "typograf": "^6.12.1",
+    "yargs": "^17.0.1"
   },
   "files": [
     "src/*.js"

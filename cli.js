@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
 const [,, ...arg] = process.argv;
-if (arg.some(argument => argument === '--help' || argument === 'h')) {
+const isHelpFloag = arg.some(argument => argument === '--help' || argument === 'h')
+if (isHelpFloag) {
   console.log('Usage: mobirise-optimizator [options]\n' +
     '\n' +
     'Options:');
@@ -17,8 +18,7 @@ if (arg.some(argument => argument === '--help' || argument === 'h')) {
     'pwa-sw-path': 'Server path: </sw.js>',
     'pwa-install-service-worker-path': 'Server path: </install-service-worker.html>',
   };
-  const mainOptionKeys = Object.keys(mainOptions);
-  mainOptionKeys.forEach(function(key) {
+  Object.keys(mainOptions).forEach(function(key) {
     const result = `--${key}`.padEnd(35) + mainOptions[key];
     console.log(result.toString());
   });
@@ -44,11 +44,11 @@ function addRelsToExternal(html) {
   }
   const whiteList = '([^/]+\.)?' + argv.whiteList.split(',').join('|');
   const str = '(<a\s*(?!.*\brel=)[^>]*)(href="https?://)((?!(?:' + whiteList + '))[^"]+)"((?!.*\brel=)[^>]*)(?:[^>]*)>';
-
-  return html.replace(new RegExp(str, 'igm'), function replacer (match, p1, p2, p3, offset, string) {
-    const anchor = p1 + p2 + p3 +'"' + string + " " + 'rel="nofollow noreferrer noopener noindex">';
-    return anchor;
-  });
+  return html
+      .replace(new RegExp(str, 'igm'), function replacer (match, p1, p2, p3, offset, string) {
+        const anchor = p1 + p2 + p3 +'"' + string + " " + 'rel="nofollow noreferrer noopener noindex">';
+        return anchor;
+      });
 }
 
 /**
@@ -84,11 +84,21 @@ function typograf(html) {
  * @return {string}
  */
 function removeOddHtml(html) {
-  const ANCHOR_REGEX = /<section class="engine"><a.[^]*?<\/a><\/section>/g;
-  const EMPTY_SYMBOLS = '';
-  return html
-      .replace(ANCHOR_REGEX, '')
-      .replaceAll(EMPTY_SYMBOLS, '');
+  const removeEngineSection = (html) => {
+    const ANCHOR_REGEX = /<section class="engine"><a.[^]*?<\/a><\/section>/g;
+    return html
+        .replace(ANCHOR_REGEX, '');
+  }
+  const removeEmptySymbols = (html) => {
+    const EMPTY_SYMBOLS = '';
+    if (String.prototype.hasOwnProperty('replaceAll')) {
+      return html
+          .replaceAll(EMPTY_SYMBOLS, '');
+    }
+    return html
+        .replace(new RegExp(EMPTY_SYMBOLS, 'igm'), '');
+  }
+  return removeEmptySymbols(removeEngineSection(html));
 }
 
 /**
@@ -129,23 +139,29 @@ function pwa(html) {
     return html;
   }
   const SW_INSTALL = "<script async custom-element='amp-install-serviceworker' src='https://cdn.ampproject.org/v0/amp-install-serviceworker-0.1.js'></script>";
-  const htmlModified = html.replace('</head>', SW_INSTALL +
-    `<link rel="manifest" href="${argv.pwaManifestPath}" crossOrigin="use-credentials">
-    <meta name="theme-color" content="#16161d"/></head>`
+  const htmlModified = html
+      .replace('</head>', SW_INSTALL + `<link rel="manifest" href="${argv.pwaManifestPath}" crossOrigin="use-credentials"><meta name="theme-color" content="#16161d"/></head>`
   );
   const SW_AMP = `<amp-install-serviceworker src='${argv.pwaSwPath}' layout='nodisplay' data-iframe-src='${argv.pwaInstallServiceWorkerPath}'></amp-install-serviceworker>`;
   return htmlModified
       .replace('</body>', SW_AMP + '</body>');
 }
 
-let result = minify();
-result = typograf(result);
-result = removeOddHtml(result);
-result = addRelsToExternal(result);
-result = opensearch(result);
-result = ld(result);
-result = pwa(result);
+/**
+ * @returns {string}
+ */
+function main() {
+  let result = minify();
+  result = typograf(result);
+  result = removeOddHtml(result);
+  result = addRelsToExternal(result);
+  result = opensearch(result);
+  result = ld(result);
+  result = pwa(result);
 
-fs.writeFileSync(outputFile, result);
+  fs.writeFileSync(outputFile, result);
 
-return result;
+  return result;
+}
+
+return main();

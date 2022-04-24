@@ -1,5 +1,7 @@
 # mobirise-optimizator
 
+Remove sponsor link for mobirise web sites.
+
 ## Example
 ```bash
 mobirise-optimizator.js index.html 

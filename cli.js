@@ -148,11 +148,32 @@ function pwa(html) {
 }
 
 /**
+ * @description hide mobirize links
+ * @param {string} html
+ * @return {string}
+ */
+function CSSHacks(html) {
+  const cssFile = `
+<style>
+  #mobiriseBanner {
+      display: none !important;
+  }
+  body > section:last-of-type:has(a) {
+	display: none !important;
+  }    
+</style>
+  `;
+  return html
+      .replace('</head>', `${cssFile}</head>`);
+}
+
+/**
  * @returns {string}
  */
 function main() {
   let result = minify();
   result = typograf(result);
+  result = CSSHacks(result);
   result = removeOddHtml(result);
   result = addRelsToExternal(result);
   result = opensearch(result);

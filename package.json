@@ -7,9 +7,7 @@
   ],
   "author": "qertis",
   "license": "MIT",
-  "bin": {
-    "mobirise-optimizator": "./cli.js"
-  },
+  "bin": "./cli.js",
   "main": "cli.js",
   "repository": {
     "type": "git",
@@ -27,7 +25,8 @@
     "yargs": "^17.5.1"
   },
   "files": [
-    "src/*.js"
+    "src/*.js",
+    "cli.js"
   ],
   "homepage": "https://baskovsky.ru/2019/07/mobirise/"
 }

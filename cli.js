@@ -156,11 +156,15 @@ function CSSHacks(html) {
   const cssFile = `
 <style>
   #mobiriseBanner {
-      display: none !important;
+    display: none !important;
   }
   body > section:last-of-type:has(a) {
-	display: none !important;
-  }    
+    display: none !important;
+  }
+  /* fallback for :has not supported */
+  body > section:last-of-type {
+    display: none !important;
+  }
 </style>
   `;
   return html

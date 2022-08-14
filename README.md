@@ -2,6 +2,11 @@
 
 Remove sponsor link for mobirise web sites.
 
+## Install
+```bash
+npm -g install https://github.com/qertis/mobirise-optimizator.git
+```
+
 ## Example
 ```bash
 mobirise-optimizator.js index.html 

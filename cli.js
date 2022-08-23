@@ -154,7 +154,7 @@ function pwa(html) {
  */
 function CSSHacks(html) {
   const cssFile = `
-<style>
+<style amp-custom>
   #mobiriseBanner {
     display: none !important;
   }

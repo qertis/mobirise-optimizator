@@ -21,9 +21,9 @@
     "node": ">=14"
   },
   "dependencies": {
-    "html-minifier": "^4.0.0",
-    "typograf": "^6.14.1",
-    "yargs": "^17.5.1"
+    "html-minifier": "4.0.0",
+    "typograf": "6.14.1",
+    "yargs": "17.5.1"
   },
   "files": [
     "src/*.js",
